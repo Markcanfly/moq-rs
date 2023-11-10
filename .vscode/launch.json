@@ -1,0 +1,136 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'moq-relay'",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=moq-relay",
+					"--package=moq-relay"
+				],
+				"filter": {
+					"name": "moq-relay",
+					"kind": "bin"
+				}
+			},
+			"console": "internalConsole",
+			"args": [
+				"--listen",
+				"[::]:4443",
+				"--tls-cert",
+				"./dev/localhost.crt",
+				"--tls-key",
+				"./dev/localhost.key",
+				"--api",
+				"http://localhost:4442",
+				"--api-node",
+				"https://localhost:4443",
+				"--dev"
+			],
+			"env": {
+				"RUST_LOG": "debug"
+			},
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'moq-api'",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=moq-api",
+					"--package=moq-api"
+				],
+				"filter": {
+					"name": "moq-api",
+					"kind": "bin"
+				}
+			},
+			"console": "internalConsole",
+			"args": [
+				"--listen",
+				"[::]:4442",
+				"--redis",
+				"redis://localhost:6400"
+			],
+			"env": {
+				"RUST_LOG": "debug"
+			},
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'moq-pub'",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=moq-pub",
+					"--package=moq-pub"
+				],
+				"filter": {
+					"name": "moq-pub",
+					"kind": "bin"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "SUB moq-latency",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=moq-latency",
+					"--package=moq-latency"
+				],
+				"filter": {
+					"name": "moq-latency",
+					"kind": "bin"
+				}
+			},
+			"console": "internalConsole",
+			"args": [
+				"https://localhost:4443/clock"
+			],
+			"env": {
+				"RUST_LOG": "debug"
+			},
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "PUB moq-latency",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=moq-latency",
+					"--package=moq-latency"
+				],
+				"filter": {
+					"name": "moq-latency",
+					"kind": "bin"
+				}
+			},
+			"console": "internalConsole",
+			"args": [
+				"https://localhost:4443/clock",
+				"--publish"
+			],
+			"env": {
+				"RUST_LOG": "debug"
+			},
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}
