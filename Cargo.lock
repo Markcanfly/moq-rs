@@ -1127,6 +1127,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "moq-latency"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "clap_mangen",
+ "env_logger",
+ "log",
+ "moq-transport",
+ "quinn",
+ "rustls",
+ "rustls-native-certs",
+ "rustls-pemfile",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+ "webtransport-quinn",
+]
+
+[[package]]
 name = "moq-pub"
 version = "0.1.0"
 dependencies = [
