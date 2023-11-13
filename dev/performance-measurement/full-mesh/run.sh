@@ -27,8 +27,8 @@ for ((r = 3; r <= 7; r++)); do
 	for ((r1 = 3; r1 <= 7; r1++)); do
 		# for each publisher of each relay
 		for ((p = 0; p < 2; p++)); do
-			# launch 10 subscribers
-			for ((i = 0; i < 10; i++)); do
+			# launch 4 subscribers
+			for ((i = 0; i < 4; i++)); do
 				start_clock_subscribe "444${r}" clock${r1}-${p} &
 				sleep 0.8
 			done

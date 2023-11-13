@@ -9,21 +9,30 @@ start_relay_with_measurement relay1 4443
 start_relay_with_measurement relay2 4444
 sleep 3
 
-# launch clock publishers
-for ((p = 0; p < 10; p++)); do
-	target/release/moq-clock https://localhost:4443/clock${p} --publish > /dev/null &
-	sleep 1
-done
-
-
-# subscribers
-for ((p = 0; p < 10; p++)); do
-	for ((s = 0; s < 40; s++)); do
-		start_clock_subscribe 4444 clock${p} &
-		sleep 0.3
+# for each relay
+for ((r = 3; r <= 4; r++)); do
+	# launch publishers
+	for ((p = 0; p < 2; p++)); do
+		target/release/moq-clock https://localhost:444${r}/clock${r}-${p} --publish > /dev/null &
+		sleep 1
 	done
-	sleep 1
 done
 
-# Sleep for some time (conduct measurements)
+# on each relay
+for ((r = 3; r <= 4; r++)); do
+	# for each other relay
+	for ((r1 = 3; r1 <= 4; r1++)); do
+		# for each publisher of each relay
+		for ((p = 0; p < 2; p++)); do
+			# launch 40 subscribers
+			for ((i = 0; i < 40; i++)); do
+				start_clock_subscribe "444${r}" clock${r1}-${p} &
+				sleep 0.8
+			done
+
+		done
+	done
+done
+
+# Measure for some time
 sleep 60
