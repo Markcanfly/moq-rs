@@ -9,11 +9,11 @@ start_relay_with_measurement spine1 4443
 sleep 1
 start_relay_with_measurement spine2 4444
 sleep 1
-start_relay_with_measurement relay2 4445 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
+start_relay_with_measurement leaf1 4445 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
 sleep 1
-start_relay_with_measurement relay3 4446 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
+start_relay_with_measurement leaf2 4446 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
 sleep 1
-start_relay_with_measurement relay4 4447 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
+start_relay_with_measurement leaf3 4447 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
 sleep 3
 
 # for each relay
