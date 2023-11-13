@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+# OUTDIR will have a default value of measurement, but can be overwritten
+OUTDIR=${OUTDIR:-measurement}
+mkdir -p "${OUTDIR}"
+
 cleanup() {
     # Kill background processes
     pkill -P $$
@@ -12,7 +16,7 @@ trap cleanup EXIT
 measure_cpu_usage() {
     local pid="$1"
     local name="$2"
-    local output_file="${name}_cpu_usage.log"
+    local output_file="${OUTDIR}/${name}_cpu_usage.log"
 
     while true; do
         local cpu_usage=$(ps -p "$pid" -o %cpu | awk 'NR>1')
@@ -29,7 +33,7 @@ execute_with_measurement() {
 	shift 1
 
     # Start the binary with its arguments and obtain the PID
-    "$@" > "${name}_output.log" 2>&1 &
+    "$@" > "${OUTDIR}/${name}_output.log" 2>&1 &
     local pid=$!
 
     # Run the CPU measurement script in the background
@@ -47,5 +51,5 @@ start_relay_with_measurement() {
 start_clock_subscribe() {
 	local port="$1"
 	local track="$2"
-	target/release/moq-clock "https://localhost:${port}/${track}" > "${track}_sub_$!.log" 2>&1
+	target/release/moq-clock "https://localhost:${port}/${track}" > "${OUTDIR}/${track}_sub_$!.log" 2>&1
 }

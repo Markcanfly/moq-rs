@@ -11,6 +11,15 @@ sleep 5
 target/release/moq-clock https://localhost:4443/clock1 --publish > /dev/null &
 sleep 3
 # launch clock subscribers, write output to file
-start_clock_subscribe 4443 clock1 &
+
+for ((p = 0; p < 10; p++)); do
+	target/release/moq-clock https://localhost:4443/clock${p} --publish > /dev/null &
+	sleep 3
+	for ((s = 0; s < 40; s++)); do
+		start_clock_subscribe 4443 clock${p} &
+	done
+
+done
+
 # Sleep for some time
 sleep 60
