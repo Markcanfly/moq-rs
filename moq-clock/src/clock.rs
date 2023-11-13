@@ -131,8 +131,8 @@ impl Subscriber {
 			log::debug!("next fragment: {:?}", fragment);
 			let value = Self::recv_fragment(fragment, base.clone()).await?;
 			let str = String::from_utf8(value).context("invalid UTF-8")?;
-
-			println!("{}", str);
+			let current = Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f").to_string();
+			println!("{} - {}", current, str);
 		}
 
 		Ok(())
