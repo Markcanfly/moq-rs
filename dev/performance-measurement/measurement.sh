@@ -2,7 +2,7 @@
 set -e
 
 # OUTDIR will have a default value of measurement, but can be overwritten
-OUTDIR=${OUTDIR:-measurement}
+OUTDIR=${OUTDIR:-measurements}
 mkdir -p "${OUTDIR}"
 
 cleanup() {
