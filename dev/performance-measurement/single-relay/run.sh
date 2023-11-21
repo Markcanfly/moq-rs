@@ -2,25 +2,36 @@
 # shellcheck source=/dev/null
 source ./dev/performance-measurement/measurement.sh
 
-# launch api
 ./dev/api &
+
 # launch relay processes, while writing their resource usage to files
 start_relay_with_measurement relay1 4443
-sleep 5
-# launch clock publishers, write output to file
-target/release/moq-clock https://localhost:4443/clock1 --publish > /dev/null &
-sleep 3
-# launch clock subscribers, write output to file
+sleep 6
 
-for ((p = 0; p < 2; p++)); do
-	target/release/moq-clock https://localhost:4443/clock${p} --publish > /dev/null &
-	sleep 3
-	for ((s = 0; s < 20; s++)); do
-		start_clock_subscribe 4443 clock${p} &
-		sleep 1
-	done
+FIRST_EDGE_RELAY_PORT=4443
+N_EDGE_RELAYS=1
+N_PUBLISHERS=16
+N_SUBSCRIBERS=400
 
+echo Starting publishers...
+for ((p = 0; p < N_PUBLISHERS; p++)); do
+	relay_port=$((FIRST_EDGE_RELAY_PORT + p % N_EDGE_RELAYS))
+	clock_id=$p
+	target/release/moq-clock "https://localhost:${relay_port}/clock${clock_id}" --publish > /dev/null &
+	sleep 1
 done
+echo Publishers started successfully
 
-# Sleep for some time
-sleep 60
+echo Starting subscribers...
+for ((s = 0; s < N_SUBSCRIBERS; s++)); do
+	echo "Starting sub ${s}/${N_SUBSCRIBERS}"
+	relay_port=$((FIRST_EDGE_RELAY_PORT + s % N_EDGE_RELAYS))
+	clock_id=$((RANDOM % N_PUBLISHERS))
+	start_clock_subscribe ${relay_port} clock${clock_id} &
+	sleep 0.8
+done
+echo Subscribers started successfully
+
+echo All measurement components started, measuring...
+# Measure for some time
+sleep 80
