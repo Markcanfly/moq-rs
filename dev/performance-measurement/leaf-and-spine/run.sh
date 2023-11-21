@@ -2,6 +2,9 @@
 # shellcheck source=/dev/null
 source ./dev/performance-measurement/measurement.sh
 
+# Seed RANDOM for repeatability
+RANDOM=42
+
 # launch api
 ./dev/api &
 # launch relay processes, while writing their resource usage to files
@@ -14,32 +17,32 @@ sleep 1
 start_relay_with_measurement leaf2 4446 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
 sleep 1
 start_relay_with_measurement leaf3 4447 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
-sleep 3
+sleep 5
 
-# for each relay
-for ((r = 3; r <= 7; r++)); do
-	# launch publishers
-	for ((p = 0; p < 2; p++)); do
-		target/release/moq-clock https://localhost:444${r}/clock${r}-${p} --publish > /dev/null &
-		sleep 1
-	done
+FIRST_EDGE_RELAY_PORT=4445
+N_EDGE_RELAYS=3
+N_PUBLISHERS=16
+N_SUBSCRIBERS=400
+
+echo Starting publishers...
+for ((p = 0; p < N_PUBLISHERS; p++)); do
+	relay_port=$((FIRST_EDGE_RELAY_PORT + p % N_EDGE_RELAYS))
+	clock_id=$p
+	target/release/moq-clock "https://localhost:${relay_port}/clock${clock_id}" --publish > /dev/null &
+	sleep 1
 done
+echo Publishers started successfully
 
-# on each relay
-for ((r = 3; r <= 7; r++)); do
-	# for each other relay
-	for ((r1 = 3; r1 <= 7; r1++)); do
-		# for each publisher of each relay
-		for ((p = 0; p < 2; p++)); do
-			# launch 10 subscribers
-			for ((i = 0; i < 10; i++)); do
-				start_clock_subscribe "444${r}" clock${r1}-${p} &
-				sleep 0.8
-			done
-
-		done
-	done
+echo Starting subscribers...
+for ((s = 0; s < N_SUBSCRIBERS; s++)); do
+	echo "Starting sub ${s}/${N_SUBSCRIBERS}"
+	relay_port=$((FIRST_EDGE_RELAY_PORT + s % N_EDGE_RELAYS))
+	clock_id=$((RANDOM % N_PUBLISHERS))
+	start_clock_subscribe ${relay_port} clock${clock_id} &
+	sleep 0.8
 done
+echo Subscribers started successfully
 
+echo All measurement components started, measuring...
 # Measure for some time
-sleep 60
+sleep 80

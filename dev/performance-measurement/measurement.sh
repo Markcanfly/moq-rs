@@ -51,5 +51,5 @@ start_relay_with_measurement() {
 start_clock_subscribe() {
 	local port="$1"
 	local track="$2"
-	target/release/moq-clock "https://localhost:${port}/${track}" > "${OUTDIR}/${track}_sub_$!.log" 2>&1
+	target/release/moq-clock "https://localhost:${port}/${track}" > "${OUTDIR}/${track}_sub_$!_on_${port}.log" 2>&1
 }
