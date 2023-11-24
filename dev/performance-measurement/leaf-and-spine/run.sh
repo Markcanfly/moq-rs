@@ -18,9 +18,13 @@ start_relay_with_measurement leaf2 4446 --next-relays https://localhost:4443/ --
 sleep 1
 start_relay_with_measurement leaf3 4447 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
 sleep 5
+start_relay_with_measurement leaf4 4448 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
+sleep 5
+start_relay_with_measurement leaf5 4449 --next-relays https://localhost:4443/ --next-relays https://localhost:4444/
+sleep 5
 
 FIRST_EDGE_RELAY_PORT=4445
-N_EDGE_RELAYS=3
+N_EDGE_RELAYS=5
 N_PUBLISHERS=16
 N_SUBSCRIBERS=400
 

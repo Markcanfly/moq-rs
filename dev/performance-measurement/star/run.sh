@@ -13,6 +13,7 @@ start_relay_with_measurement relay1 4444 --next-relays https://localhost:4443/
 start_relay_with_measurement relay2 4445 --next-relays https://localhost:4443/
 start_relay_with_measurement relay3 4446 --next-relays https://localhost:4443/
 start_relay_with_measurement relay4 4447 --next-relays https://localhost:4443/
+start_relay_with_measurement relay5 4448 --next-relays https://localhost:4443/
 sleep 6
 
 #!/usr/bin/env bash
@@ -20,7 +21,7 @@ sleep 6
 source ./dev/performance-measurement/measurement.sh
 
 FIRST_EDGE_RELAY_PORT=4444
-N_EDGE_RELAYS=4
+N_EDGE_RELAYS=5
 N_PUBLISHERS=16
 N_SUBSCRIBERS=400
 
