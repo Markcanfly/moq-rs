@@ -27,6 +27,12 @@ measure_cpu_usage() {
     done
 }
 
+network_usage_snapshot() {
+	nettop -x -L 1 -P \
+	-k interface -k state -k rx_dupe -k rx_ooo -k re-tx -k rtt_avg -k rcvsize -k tx_win -k tc_class -k tc_mgt -k cc_algo -k P -k C -kR -k W -k arch \
+	> "${OUTDIR}/network-snapshot-$(date +"%Y-%m-%d--%H-%M-%S").csv"
+}
+
 execute_with_measurement() {
     local name="$1"
 

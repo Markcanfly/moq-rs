@@ -46,4 +46,6 @@ echo Subscribers started successfully
 
 echo All measurement components started, measuring...
 # Measure for some time
-sleep 80
+network_usage_snapshot
+sleep 120
+network_usage_snapshot
