@@ -16,7 +16,7 @@ trap cleanup EXIT
 measure_cpu_usage() {
     local pid="$1"
     local name="$2"
-    local output_file="${OUTDIR}/${name}_cpu_usage.log"
+    local output_file="${OUTDIR}/${name}_${pid}_cpu_usage.log"
 
     while true; do
         local cpu_usage=$(ps -p "$pid" -o %cpu | awk 'NR>1')
